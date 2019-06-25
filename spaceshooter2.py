@@ -1,4 +1,6 @@
-from triton.ecs import Registry, Component, System, Event
+from triton.ecs import Registry, Component, System
+from ss_events import *
+from ss_inputsystem import *
 
 import pygame
 
@@ -36,6 +38,10 @@ class Weapon(Component):
         self.cooldown = cooldown
         self.countdown = 0
 
+class AnimationStrip:
+    def __init__(self):
+        pass
+
 class Animatable(Component):
     def __init__(self, sprite_sheet):
         self.sprite_sheet = sprite_sheet
@@ -72,101 +78,6 @@ class GameState(Component):
         self.dt = 1.0
         self.screen_size = (0,0)
 
-# Event components
-class CollisionEvent(Event):
-    pass
-class DieEvent(Event):
-    pass
-class GameStartEvent(Event):
-    pass
-class NextLevelEvent(Event):
-    pass
-
-class ToggleFullscreenEvent(Event):
-    pass
-
-class AccelEvent(Event):
-    FW=1
-    BW=2
-    LT=3
-    RG=4
-    def __init__(self, entity, direction, on=0):
-        self.entity = entity
-        self.direction = direction
-        self.on = on
-
-class ShootEvent(Event):
-    def __init__(self, entity):
-        self.entity = entity
-
-class GameExitEvent(Event):
-    pass
-
-class TickEvent(Event):
-    pass
-
-# Systems
-class InputSystem(System):
-    def initialize(self):
-        self.on(TickEvent, self.update)
-
-    def update(self, _):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.emit(GameExitEvent())
-                break
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE or event.key == pygame.K_q:
-                    self.emit(GameExitEvent())
-                    break
-
-            if event.type == pygame.KEYDOWN: 
-                if event.key == pygame.K_u:
-                    self.emit(ToggleFullscreenEvent())
-            for e, [c, m] in self.registry.get_components(PlayerOne, Movable):
-                if event.type == pygame.KEYDOWN: 
-                    if event.key == pygame.K_UP:
-                        self.emit(AccelEvent(e, AccelEvent.FW, 1))
-                    elif event.key == pygame.K_DOWN:
-                        self.emit(AccelEvent(e, AccelEvent.BW, 1))
-                    elif event.key == pygame.K_LEFT:
-                        self.emit(AccelEvent(e, AccelEvent.LT, 1))
-                    elif event.key == pygame.K_RIGHT:
-                        self.emit(AccelEvent(e, AccelEvent.RG, 1))
-                    elif event.key == pygame.K_SPACE:
-                        self.emit(ShootEvent(e))
-                elif event.type == pygame.KEYUP: 
-                    if event.key == pygame.K_UP:
-                        self.emit(AccelEvent(e, AccelEvent.FW, 0))
-                    elif event.key == pygame.K_DOWN:
-                        self.emit(AccelEvent(e, AccelEvent.BW, 0))
-                    elif event.key == pygame.K_LEFT:
-                        self.emit(AccelEvent(e, AccelEvent.LT, 0))
-                    elif event.key == pygame.K_RIGHT:
-                        self.emit(AccelEvent(e, AccelEvent.RG, 0))
-
-            for e, [c, m] in self.registry.get_components(PlayerTwo, Movable):
-                if event.type == pygame.KEYDOWN: 
-                    if event.key == pygame.K_w:
-                        self.emit(AccelEvent(e, AccelEvent.FW, 1))
-                    elif event.key == pygame.K_s:
-                        self.emit(AccelEvent(e, AccelEvent.BW, 1))
-                    elif event.key == pygame.K_a:
-                        self.emit(AccelEvent(e, AccelEvent.LT, 1))
-                    elif event.key == pygame.K_d:
-                        self.emit(AccelEvent(e, AccelEvent.RG, 1))
-                    elif event.key == pygame.K_e:
-                        self.emit(ShootEvent(e))
-                elif event.type == pygame.KEYUP: 
-                    if event.key == pygame.K_w:
-                        self.emit(AccelEvent(e, AccelEvent.FW, 0))
-                    elif event.key == pygame.K_s:
-                        self.emit(AccelEvent(e, AccelEvent.BW, 0))
-                    elif event.key == pygame.K_a:
-                        self.emit(AccelEvent(e, AccelEvent.LT, 0))
-                    elif event.key == pygame.K_d:
-                        self.emit(AccelEvent(e, AccelEvent.RG, 0))
 
 
 class ProjectileSystem(System):
@@ -219,12 +130,12 @@ class SimulationSystem(System):
         dt = 0.01
         for e, (g,) in self.registry.get_components(
                 GameState):
-            dt = g.dt/1000.0
+            dt = g.dt
 
         for e, (v, m) in self.registry.get_components(
                 Velocity, Movable):
-            v.y += (m.backward-m.forward)*10000*dt
-            v.x += (m.right-m.left)*10000*dt
+            v.y += (m.backward-m.forward)*dt/100.0
+            v.x += (m.right-m.left)*dt/100.0
 
         for e, (p, v) in self.registry.get_components(
                 Position, Velocity):
@@ -236,7 +147,7 @@ class SimulationSystem(System):
             
 class AnimationSystem(System):
     def initialize(self):
-        self.on(TickEvent, self.update)
+        self.on(AnimationTickEvent, self.update)
         self.on(AccelEvent, self.on_accel)
 
     def on_accel(self, accel):
@@ -282,45 +193,6 @@ class AnimationSystem(System):
                 a.rect = a.image.get_rect()
                 a.rect.center = (p.x, p.y)
 
-import pygame.gfxdraw
-class RenderSystem(System):
-    def initialize(self):
-        self.screen = None
-        self.clock = pygame.time.Clock()
-        self.FPS = 60
-        self.on(TickEvent, self.update)
-        self.on(ToggleFullscreenEvent, self.toggle_fullscreen)
-        self.toggle_fullscreen(None)
-
-    def toggle_fullscreen(self, _):
-        self.screen_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
-        if self.screen is not None and self.screen.get_flags() & pygame.FULLSCREEN:
-            self.screen = pygame.display.set_mode(self.screen_size, pygame.DOUBLEBUF, 32)
-        else:
-            self.screen = pygame.display.set_mode(self.screen_size, pygame.FULLSCREEN | pygame.DOUBLEBUF, 32)
-
-        for e, (g,) in self.registry.get_components(
-                GameState):
-            g.screen_size = self.screen_size
-
-    def update(self, _):
-        self.screen.fill((100,100,100))
-
-        for e, (p, a) in self.registry.get_components(
-                Position, Animatable):
-            if a.image is None:
-                continue
-            self.screen.blit(
-                a.image,
-                a.rect)
-
-        pygame.display.update()
-        dt = self.clock.tick(self.FPS)
-        for e, (g,) in self.registry.get_components(
-                GameState):
-            g.dt = dt
-            g.t += dt
-            g.screen_size = self.screen_size
 
 class CollisionSystem(System):
     pass
@@ -363,6 +235,7 @@ class GameStateSystem(System):
 
     def update(self, _):
         self.emit(TickEvent())
+        self.emit(AnimationTickEvent())
 
 def main():
     pygame.init()
@@ -408,6 +281,7 @@ def main():
             PlayerOne(),
             Animatable(ship_sprite),
             Renderable())
+
     for i in range(100):
         registry.add_entity(
                 Position(x=10+i*10, y=10+i*10),
