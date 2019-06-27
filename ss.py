@@ -31,7 +31,7 @@ def main():
 
 
     ship_sprite=registry.add_entity(
-            SpriteSheet(filename="spaceship.gif",
+            SpriteSheet(filename="res/spaceship.gif",
             BWCT=[(40, 0, 40, 40)],
             FWCT=[(40, 40, 40, 45),
                 (40, 86, 40, 45)],
