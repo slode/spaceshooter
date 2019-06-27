@@ -1,7 +1,7 @@
 import pygame
 from triton.ecs import System
-from ss_events import *
-from ss_components import PlayerOne, PlayerTwo, Movable
+from events import *
+from components import PlayerOne, PlayerTwo, Movable
 
 # Systems
 class InputSystem(System):

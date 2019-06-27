@@ -1,18 +1,18 @@
 from triton.ecs import Registry, Component, System
 
-from ss_events import *
-from ss_components import *
+from ss.events import *
+from ss.components import *
 
-from ss_aisystem import AiSystem
-from ss_inputsystem import InputSystem
-from ss_rendersystem import RenderSystem
-from ss_damagesystem import DamageSystem
-from ss_animationsystem import AnimationSystem
-from ss_collisionsystem import CollisionSystem
-from ss_gamestatesystem import GameStateSystem
-from ss_projectilesystem import ProjectileSystem
-from ss_screenwrapsystem import ScreenwrapSystem
-from ss_simulationsystem import SimulationSystem
+from ss.aisystem import AiSystem
+from ss.inputsystem import InputSystem
+from ss.rendersystem import RenderSystem
+from ss.damagesystem import DamageSystem
+from ss.animationsystem import AnimationSystem
+from ss.collisionsystem import CollisionSystem
+from ss.gamestatesystem import GameStateSystem
+from ss.projectilesystem import ProjectileSystem
+from ss.screenwrapsystem import ScreenwrapSystem
+from ss.simulationsystem import SimulationSystem
 
 import pygame
 

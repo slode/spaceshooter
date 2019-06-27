@@ -1,7 +1,7 @@
 from triton.ecs import System
 
-from ss_events import *
-from ss_components import *
+from events import *
+from components import *
 
 class SimulationSystem(System):
     def initialize(self):
