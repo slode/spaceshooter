@@ -1,1 +1,2 @@
+pygame
 git+https://github.com/slode/triton#egg=triton

@@ -1,7 +1,7 @@
 from triton.ecs import System
 
-from components import *
-from events import *
+from .components import *
+from .events import *
 
 import pygame
 import pygame.gfxdraw

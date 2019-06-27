@@ -48,7 +48,7 @@ class Animatable(Component):
         self.rect = None
         self.sprites = None
 
-from sprites import spritesheet
+from ss.sprites import spritesheet
 class SpriteSheet(Component):
     def __init__(self, filename=None, **slices):
         ss = spritesheet(filename)

@@ -1,5 +1,7 @@
 from triton.ecs import Registry, Component, System
 
+from ss.sprites import spritesheet
+
 from ss.events import *
 from ss.components import *
 
