@@ -5,7 +5,7 @@ from ss_components import *
 
 class AnimationSystem(System):
     def initialize(self):
-        self.on(AnimationTickEvent, self.update)
+        self.on(AnimationTickEvent, self.update_animation)
         self.on(AccelEvent, self.on_accel)
 
     def on_accel(self, accel):
@@ -31,7 +31,7 @@ class AnimationSystem(System):
         if key in s.sprites:
             a.sprites = s.sprites[key]
 
-    def update(self, _):
+    def update_animation(self, _):
         for e, (g,) in self.registry.get_components(
                 GameState):
             t = g.t

@@ -26,10 +26,6 @@ class RenderSystem(System):
  #       else:
   #          self.screen = pygame.display.set_mode(self.screen_size, pygame.FULLSCREEN | pygame.DOUBLEBUF, 32)
 
-        for e, (g,) in self.registry.get_components(
-                GameState):
-            g.screen_size = self.screen_size
-
     def update(self, _):
         self.screen.fill((100,100,100))
 

@@ -39,4 +39,3 @@ class SimulationSystem(System):
             v.y *= att
             p.x += v.x * dt
             p.y += v.y * dt
-            print(e, p.x, p.y)
