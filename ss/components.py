@@ -7,6 +7,13 @@ class PlayerTwo(Component):
     pass
 
 class Movable(Component):
+    def __init__(self):
+        self.forward = 0
+        self.backward = 0
+        self.left = 0
+        self.right = 0
+
+class EntityState(Component):
     UPLEFT=1
     UPCENTER=2
     UPRIGHT=3
@@ -16,13 +23,11 @@ class Movable(Component):
     BACKLEFT=7
     BACKCENTER=8
     BACKRIGHT=9
+    SHOOTING=10
+    EXPLODING=11
 
     def __init__(self):
-        self.state = self.DEFAULT
-        self.forward = 0
-        self.backward = 0
-        self.left = 0
-        self.right = 0
+        self.direction = self.DEFAULT
 
 class Position(Component):
     def __init__(self, x=0, y=0):
@@ -45,10 +50,6 @@ class Weapon(Component):
         self.cooldown = cooldown
         self.countdown = 0
 
-class AnimationStrip:
-    def __init__(self):
-        pass
-
 class Animatable(Component):
     def __init__(self, sprite_sheet):
         self.sprite_sheet = sprite_sheet
@@ -59,10 +60,10 @@ class Animatable(Component):
         self.rect = None
         self.sprites = None
 
-from ss.sprites import spritesheet
+from ss.sprites import SpriteLoader
 class SpriteSheet(Component):
     def __init__(self, filename=None, **slices):
-        ss = spritesheet(filename)
+        ss = SpriteLoader(filename)
         self.sprites = {}
         for k,v in slices.items():
             self.sprites[k] = ss.images_at(v, colorkey=-1)
