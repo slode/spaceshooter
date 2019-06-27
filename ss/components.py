@@ -7,11 +7,22 @@ class PlayerTwo(Component):
     pass
 
 class Movable(Component):
-    def __init__(self, forward=0, backward=0, left=0, right=0):
-        self.forward = forward
-        self.backward = backward
-        self.left = left
-        self.right = right
+    UPLEFT=1
+    UPCENTER=2
+    UPRIGHT=3
+    LEFT=4
+    DEFAULT=5
+    RIGHT=6
+    BACKLEFT=7
+    BACKCENTER=8
+    BACKRIGHT=9
+
+    def __init__(self):
+        self.state = self.DEFAULT
+        self.forward = 0
+        self.backward = 0
+        self.left = 0
+        self.right = 0
 
 class Position(Component):
     def __init__(self, x=0, y=0):

@@ -37,6 +37,14 @@ class RenderSystem(System):
                 a.image,
                 a.rect)
 
+        for e, (p, r) in self.registry.get_components(
+                Position, Renderable):
+            if a.image is None:
+                continue
+            self.screen.blit(
+                a.image,
+                a.rect)
+
         pygame.display.update()
         dt = self.clock.tick(self.FPS)
         for e, (g,) in self.registry.get_components(

@@ -9,5 +9,10 @@ class CollisionSystem(System):
         pass
 
     def check_for_collisions(self, _):
-        pass
+        for e1, (p1, v1, c1) in self.registry.get_components(
+                Position, Velocity, Collidable):
+            for e2, (p2, v2, c2) in self.registry.get_components(
+                    Position, Velocity, Collidable):
+                if e2 >= e1:
+                    continue
 
