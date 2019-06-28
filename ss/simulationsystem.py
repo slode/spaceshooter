@@ -21,6 +21,8 @@ class SimulationSystem(System):
         elif accel.direction == AccelEvent.RG:
             m.right = accel.on
 
+        self.emit(EntityStateEvent(accel.entity))
+
     def update(self, _):
         dt = 0.01
         for e, (g,) in self.registry.get_components(

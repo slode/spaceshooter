@@ -27,7 +27,7 @@ class EntityState(Component):
     EXPLODING=11
 
     def __init__(self):
-        self.direction = self.DEFAULT
+        self.state = self.DEFAULT
 
 class Position(Component):
     def __init__(self, x=0, y=0):
@@ -40,10 +40,6 @@ class Velocity(Component):
         self.x = x
         self.y = y
 
-class Orientation(Component):
-    def __init__(self, direction=1):
-        self.direction = direction
-
 class Weapon(Component):
     def __init__(self, damage=10, cooldown=3):
         self.damage = damage
@@ -51,25 +47,26 @@ class Weapon(Component):
         self.countdown = 0
 
 class Animatable(Component):
-    def __init__(self, sprite_sheet):
-        self.sprite_sheet = sprite_sheet
+    def __init__(self, sprite_entity):
+        self.sprite_entity = sprite_entity
         self.frame_rate = 30.0
         self.frame_index = 0
-        self.previous_frame = 0
-        self.image = None
-        self.rect = None
+        self.frame_timer = 0
+        self.loopable = True
         self.sprites = None
 
 from ss.sprites import SpriteLoader
 class SpriteSheet(Component):
-    def __init__(self, filename=None, **slices):
+    def __init__(self, filename=None, slices={}):
         ss = SpriteLoader(filename)
         self.sprites = {}
         for k,v in slices.items():
             self.sprites[k] = ss.images_at(v, colorkey=-1)
 
 class Renderable(Component):
-    pass
+    def __init__(self):
+        self.image = None
+        self.rect = None
 
 class Health(Component):
     def __init__(self, health=10):

@@ -4,55 +4,69 @@ from .events import *
 from .components import *
 
 class AnimationStartEvent(Event):
-    pass
+    def __init__(self, entity):
+        self.entity = entity
 
 class AnimationStopEvent(Event):
-    pass
+    def __init__(self, entity):
+        self.entity = entity
 
 class AnimationSystem(System):
     def initialize(self):
         self.on(AnimationTickEvent, self.update_animation)
-        self.on(AccelEvent, self.on_accel_event)
         self.on(AnimationStopEvent, self.on_animation_stop)
         self.on(AnimationStartEvent, self.on_animation_start)
-#        self.on(EntityStateChangeEvent, self.on_state_change)
+        self.on(EntityStateEvent, self.on_state_change)
 
     def on_state_change(self, stateev):
-        pass
+        [a, s] = self.registry.get_entity(
+                stateev.entity, Animatable, EntityState)
 
-    def on_accel_event(self, accelev):
-        [a, m, s] = self.registry.get_entity(
-                accel.entity, Animatable, MotionState)
+        [sprite_comp] = self.registry.get_entity(
+                a.sprite_entity,
+                SpriteSheet)
 
-        [s] = self.registry.get_entity(
-                a.sprite_sheet, SpriteSheet)
-
-        a.sprites = s.sprites[s]
+        a.sprites = sprite_comp.sprites[s.state]
 
     def update_animation(self, _):
         for e, (g,) in self.registry.get_components(
                 GameState):
             t = g.t
 
-        for e, (p, a) in self.registry.get_components(
-                Position, Animatable):
-            
+        for e, (p, a, r) in self.registry.get_components(
+                Position, Animatable, Renderable):
+
             if a.sprites is None:
-                [s] = self.registry.get_entity(
-                        a.sprite_sheet, SpriteSheet)
-                a.sprites = s.sprites[EntityState.DEFAULT]
+                self.emit(AnimationStartEvent(e))
+                continue
             
-            if  (t - a.previous_frame) > a.frame_rate:
-                self.emit(AnimationStopEvent(e))
-                a.previous_frame = t
-                a.frame_index = (a.frame_index + 1) % len(a.sprites)
-                a.image = a.sprites[a.frame_index]
-                a.rect = a.image.get_rect()
-                a.rect.center = (p.x, p.y)
+            if  (t - a.frame_timer) > a.frame_rate:
+                r.image = a.sprites[a.frame_index]
+                a.frame_timer = t
+                a.frame_index += 1
+                r.rect = r.image.get_rect()
+                r.rect.center = (p.x, p.y)
+
+            if a.frame_index >= len(a.sprites):
+                if not a.loopable:
+                    self.emit(AnimationStopEvent(e))
+                else:
+                    a.frame_index = 0
 
     def on_animation_start(self, startev):
-        pass
+        [a, s] = self.registry.get_entity(
+                startev.entity, Animatable, EntityState)
+
+        [sprite_comp] = self.registry.get_entity(
+                a.sprite_entity,
+                SpriteSheet)
+
+        a.sprites = sprite_comp.sprites[s.state]
 
     def on_animation_stop(self, stopev):
-        pass
-
+        [a] = self.registry.get_entity(
+                startev.entity, Animatable)
+        if a.loopable:
+            a.frame_index = 0
+        else:
+            self.emit(AnimationStartEvent(stopev.entity))

@@ -35,3 +35,7 @@ class TickEvent(Event):
 
 class AnimationTickEvent(Event):
     pass
+
+class EntityStateEvent(Event):
+    def __init__(self, entity):
+        self.entity = entity

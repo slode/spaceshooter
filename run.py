@@ -34,33 +34,38 @@ def main():
 
     ship_sprite=registry.add_entity(
             SpriteSheet(filename="res/spaceship.gif",
-            BWCT=[(40, 0, 40, 40)],
-            FWCT=[(40, 40, 40, 45),
-                (40, 86, 40, 45)],
-            BWLT=[(0, 0, 30, 40)],
-            FWLT=[(0, 40, 30, 45),
-                  (0, 86, 30, 45)],
-            BWRG=[(85, 0, 30, 40)],
-            FWRG=[(85, 40, 30, 45),
-                  (85, 86, 30, 45)]))
+                slices = {
+                EntityState.UPLEFT:    [(0, 40, 30, 45),  (0, 86, 30, 45)],
+                EntityState.UPCENTER:  [(40, 40, 40, 45), (40, 86, 40, 45)],
+                EntityState.UPRIGHT:   [(85, 40, 30, 45), (85, 86, 30, 45)],
+                EntityState.LEFT:      [(0, 40, 30, 45),  (0, 86, 30, 45)],
+                EntityState.DEFAULT:   [(40, 40, 40, 45), (40, 86, 40, 45)],
+                EntityState.RIGHT:     [(85, 40, 30, 45), (85, 86, 30, 45)],
+                EntityState.BACKLEFT:  [(0, 0, 30, 40)],
+                EntityState.BACKCENTER:[(40, 0, 40, 40)],
+                EntityState.BACKRIGHT: [(85, 0, 30, 40)]
+                }
+    ))
 
     registry.add_entity(
+            PlayerOne(),
             Position(x=50, y=50),
             Velocity(),
             Health(),
             Weapon(),
             Movable(),
-            PlayerOne(),
+            EntityState(),
             Animatable(ship_sprite),
             Renderable())
 
     registry.add_entity(
+            PlayerTwo(),
             Position(),
             Velocity(),
             Health(),
             Weapon(),
-            PlayerTwo(),
             Movable(),
+            EntityState(),
             Animatable(ship_sprite),
             Renderable())
 

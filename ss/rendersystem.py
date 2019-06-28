@@ -29,21 +29,15 @@ class RenderSystem(System):
     def update(self, _):
         self.screen.fill((100,100,100))
 
-        for e, (p, a) in self.registry.get_components(
-                Position, Animatable):
-            if a.image is None:
-                continue
-            self.screen.blit(
-                a.image,
-                a.rect)
-
         for e, (p, r) in self.registry.get_components(
                 Position, Renderable):
-            if a.image is None:
+
+            if r.image is None:
                 continue
+
             self.screen.blit(
-                a.image,
-                a.rect)
+                r.image,
+                r.rect)
 
         pygame.display.update()
         dt = self.clock.tick(self.FPS)
