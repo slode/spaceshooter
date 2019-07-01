@@ -1,0 +1,51 @@
+{
+  "animations": [
+    {
+      "state": "DEFAULT",
+      "slices": [(40, 40, 40, 45), (40, 86, 40, 45)],
+      "filename": "res/spaceship.gif"
+      "frame-rate": 30,
+      "loop": true
+    },
+    {
+      "state": "UPLEFT",
+      "slices": [(0, 40, 30, 45),  (0, 86, 30, 45)],
+      "filename": "res/spaceship.gif"
+    },
+    {
+      "state": "UPCENTER",
+      "slices": [(40, 40, 40, 45), (40, 86, 40, 45)],
+      "filename": "res/spaceship.gif"
+    },
+    {
+      "state": "UPRIGHT",
+      "slices": [(85, 40, 30, 45), (85, 86, 30, 45)],
+      "filename": "res/spaceship.gif"
+    },
+    {
+      "state": "LEFT",
+      "slices": [(0, 40, 30, 45),  (0, 86, 30, 45)],
+      "filename": "res/spaceship.gif"
+    },
+    {
+      "state": "RIGHT",
+      "slices": [(85, 40, 30, 45), (85, 86, 30, 45)],
+      "filename": "res/spaceship.gif"
+    },
+    {
+      "state": "BACKLEFT",
+      "slices": [(0, 0, 30, 40)],
+      "filename": "res/spaceship.gif"
+    },
+    {
+      "state": "BACKCENTER",
+      "slices": [(40, 0, 40, 40)],
+      "filename": "res/spaceship.gif"
+    },
+    {
+      "state": "BACKRIGHT",
+      "slices": [(85, 0, 30, 40)],
+      "filename": "res/spaceship.gif"
+    }
+  ]
+}
