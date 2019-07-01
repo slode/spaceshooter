@@ -32,14 +32,14 @@ class SpriteLoader(object):
     def images_at(self, rects, colorkey = None):
         "Loads multiple images, supply a list of coordinates" 
         return [self.image_at(rect, colorkey) for rect in rects]
-    
+
     # Load a whole strip of images
     def load_strip(self, rect, image_count, colorkey = None):
         "Loads a strip of images and returns them as a list"
         tups = [(rect[0]+rect[2]*x, rect[1], rect[2], rect[3])
                 for x in range(image_count)]
         return self.images_at(tups, colorkey)
-    
+
     # Load a whole strip of images
     def load_grid(self, rect, shape, colorkey = None):
         "Loads a strip of images and returns them as a list"
