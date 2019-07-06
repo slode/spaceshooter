@@ -7,11 +7,11 @@ class PlayerTwo(Component):
     pass
 
 class Movable(Component):
-    def __init__(self):
-        self.forward = 0
-        self.backward = 0
-        self.left = 0
-        self.right = 0
+    def __init__(self, forward=0, backward=0, left=0, right=0):
+        self.forward = forward
+        self.backward = backward
+        self.left = left
+        self.right = right
 
 class EntityState(Component):
     UPLEFT=1
@@ -41,7 +41,8 @@ class Velocity(Component):
         self.y = y
 
 class Weapon(Component):
-    def __init__(self, damage=10, cooldown=3):
+    def __init__(self, sprite_name=None, damage=10, cooldown=0.5):
+        self.sprite_name = sprite_name
         self.damage = damage
         self.cooldown = cooldown
         self.countdown = 0

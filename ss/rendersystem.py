@@ -20,11 +20,10 @@ class RenderSystem(System):
 
     def toggle_fullscreen(self, _):
         self.screen_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
-        self.screen_size = (800, 800)
-#        if self.screen is not None and self.screen.get_flags() & pygame.FULLSCREEN:
-        self.screen = pygame.display.set_mode(self.screen_size, pygame.DOUBLEBUF, 32)
- #       else:
-  #          self.screen = pygame.display.set_mode(self.screen_size, pygame.FULLSCREEN | pygame.DOUBLEBUF, 32)
+        if self.screen is not None and self.screen.get_flags() & pygame.FULLSCREEN:
+            self.screen = pygame.display.set_mode(self.screen_size, pygame.DOUBLEBUF, 32)
+        else:
+            self.screen = pygame.display.set_mode(self.screen_size, pygame.FULLSCREEN | pygame.DOUBLEBUF, 32)
 
     def update(self, _):
         self.screen.fill((100,100,100))

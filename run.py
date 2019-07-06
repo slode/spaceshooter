@@ -35,15 +35,15 @@ def main():
     ship_sprite=registry.add_entity(
             SpriteSheet(filename="res/spaceship.gif",
                 slices = {
-                EntityState.UPLEFT:    [(0, 40, 30, 45),  (0, 86, 30, 45)],
-                EntityState.UPCENTER:  [(40, 40, 40, 45), (40, 86, 40, 45)],
-                EntityState.UPRIGHT:   [(85, 40, 30, 45), (85, 86, 30, 45)],
-                EntityState.LEFT:      [(0, 40, 30, 45),  (0, 86, 30, 45)],
-                EntityState.DEFAULT:   [(40, 40, 40, 45), (40, 86, 40, 45)],
-                EntityState.RIGHT:     [(85, 40, 30, 45), (85, 86, 30, 45)],
-                EntityState.BACKLEFT:  [(0, 0, 30, 40)],
-                EntityState.BACKCENTER:[(40, 0, 40, 40)],
-                EntityState.BACKRIGHT: [(85, 0, 30, 40)]
+                AnimationEvent.UPLEFT:    [(0, 40, 30, 45),  (0, 86, 30, 45)],
+                AnimationEvent.UPCENTER:  [(40, 40, 40, 45), (40, 86, 40, 45)],
+                AnimationEvent.UPRIGHT:   [(85, 40, 30, 45), (85, 86, 30, 45)],
+                AnimationEvent.LEFT:      [(0, 40, 30, 45),  (0, 86, 30, 45)],
+                AnimationEvent.DEFAULT:   [(40, 40, 40, 45), (40, 86, 40, 45)],
+                AnimationEvent.RIGHT:     [(85, 40, 30, 45), (85, 86, 30, 45)],
+                AnimationEvent.BACKLEFT:  [(0, 0, 30, 40)],
+                AnimationEvent.BACKCENTER:[(40, 0, 40, 40)],
+                AnimationEvent.BACKRIGHT: [(85, 0, 30, 40)]
                 }
     ))
 
@@ -54,7 +54,7 @@ def main():
             Health(),
             Weapon(),
             Movable(),
-            EntityState(),
+            Collidable(),
             Animatable(ship_sprite),
             Renderable())
 
@@ -65,7 +65,7 @@ def main():
             Health(),
             Weapon(),
             Movable(),
-            EntityState(),
+            Collidable(),
             Animatable(ship_sprite),
             Renderable())
 

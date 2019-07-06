@@ -3,30 +3,13 @@ from triton.ecs import System
 from .events import *
 from .components import *
 
-class AnimationStartEvent(Event):
-    def __init__(self, entity):
-        self.entity = entity
-
-class AnimationStopEvent(Event):
-    def __init__(self, entity):
-        self.entity = entity
 
 class AnimationSystem(System):
     def initialize(self):
         self.on(AnimationTickEvent, self.update_animation)
         self.on(AnimationStopEvent, self.on_animation_stop)
-        self.on(AnimationStartEvent, self.on_animation_start)
-        self.on(EntityStateEvent, self.on_state_change)
-
-    def on_state_change(self, stateev):
-        [a, s] = self.registry.get_entity(
-                stateev.entity, Animatable, EntityState)
-
-        [sprite_comp] = self.registry.get_entity(
-                a.sprite_entity,
-                SpriteSheet)
-
-        a.sprites = sprite_comp.sprites[s.state]
+        self.on(AnimationEvent, self.on_animation_event)
+        self.on(TickEvent, self.on_update)
 
     def update_animation(self, _):
         for e, (g,) in self.registry.get_components(
@@ -37,7 +20,7 @@ class AnimationSystem(System):
                 Position, Animatable, Renderable):
 
             if a.sprites is None:
-                self.emit(AnimationStartEvent(e))
+                self.emit(AnimationEvent(e))
                 continue
             
             if  (t - a.frame_timer) > a.frame_rate:
@@ -53,15 +36,20 @@ class AnimationSystem(System):
                 else:
                     a.frame_index = 0
 
-    def on_animation_start(self, startev):
-        [a, s] = self.registry.get_entity(
-                startev.entity, Animatable, EntityState)
+    def on_animation_event(self, animev):
+        [a] = self.registry.get_entity(
+                animev.entity, Animatable)
 
         [sprite_comp] = self.registry.get_entity(
                 a.sprite_entity,
                 SpriteSheet)
 
-        a.sprites = sprite_comp.sprites[s.state]
+        try:
+            a.sprites = sprite_comp.sprites[animev.state]
+        except:
+            a.sprites = sprite_comp.sprites[AnimationEvent.DEFAULT]
+
+        a.frame_index = 0
 
     def on_animation_stop(self, stopev):
         [a] = self.registry.get_entity(
@@ -69,4 +57,7 @@ class AnimationSystem(System):
         if a.loopable:
             a.frame_index = 0
         else:
-            self.emit(AnimationStartEvent(stopev.entity))
+            self.emit(AnimationEvent(stopev.entity))
+
+    def on_update(self, _):
+        self.emit(AnimationTickEvent())

@@ -8,13 +8,13 @@ class ScreenwrapSystem(System):
         self.on(TickEvent, self.update)
 
     def update(self, _):
+        for e, (g,) in self.registry.get_components(
+                GameState):
+            if g.screen_size == (0,0):
+                return
+
         for e, (p, v) in self.registry.get_components(
                 Position, Velocity):
-            for e, (g,) in self.registry.get_components(
-                    GameState):
-                if g.screen_size == (0,0):
-                    return
-
                 if p.x < 0:
                     p.x = g.screen_size[0]
                 elif p.x > g.screen_size[0]:

@@ -21,7 +21,28 @@ class SimulationSystem(System):
         elif accel.direction == AccelEvent.RG:
             m.right = accel.on
 
-        self.emit(EntityStateEvent(accel.entity))
+        if m.backward - m.forward > 0:
+            if m.right - m.left > 0:
+                self.emit(AnimationEvent(accel.entity, AnimationEvent.BACKRIGHT))
+            elif m.right - m.left < 0:
+                self.emit(AnimationEvent(accel.entity, AnimationEvent.BACKLEFT))
+            else:
+                self.emit(AnimationEvent(accel.entity, AnimationEvent.BACKCENTER))
+        elif m.backward - m.forward < 0:
+            if m.right - m.left > 0:
+                self.emit(AnimationEvent(accel.entity, AnimationEvent.UPRIGHT))
+            elif m.right - m.left < 0:
+                self.emit(AnimationEvent(accel.entity, AnimationEvent.UPLEFT))
+            else:
+                self.emit(AnimationEvent(accel.entity, AnimationEvent.UPCENTER))
+        else:
+            if m.right - m.left > 0:
+                self.emit(AnimationEvent(accel.entity, AnimationEvent.RIGHT))
+            elif m.right - m.left < 0:
+                self.emit(AnimationEvent(accel.entity, AnimationEvent.LEFT))
+            else:
+                self.emit(AnimationEvent(accel.entity, AnimationEvent.DEFAULT))
+
 
     def update(self, _):
         dt = 0.01
@@ -41,3 +62,4 @@ class SimulationSystem(System):
             v.y *= att
             p.x += v.x * dt
             p.y += v.y * dt
+

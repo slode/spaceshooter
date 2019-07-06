@@ -33,9 +33,26 @@ class GameExitEvent(Event):
 class TickEvent(Event):
     pass
 
-class AnimationTickEvent(Event):
-    pass
+class AnimationEvent(Event):
+    UPLEFT=1
+    UPCENTER=2
+    UPRIGHT=3
+    LEFT=4
+    DEFAULT=5
+    RIGHT=6
+    BACKLEFT=7
+    BACKCENTER=8
+    BACKRIGHT=9
+    SHOOTING=10
+    EXPLODING=11
+    
+    def __init__(self, entity, state=DEFAULT):
+        self.entity = entity
+        self.state = state
 
-class EntityStateEvent(Event):
+class AnimationStopEvent(Event):
     def __init__(self, entity):
         self.entity = entity
+
+class AnimationTickEvent(Event):
+    pass
