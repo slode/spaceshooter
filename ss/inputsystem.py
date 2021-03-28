@@ -17,6 +17,17 @@ class InputSystem(System):
                 break
 
             if event.type == pygame.KEYDOWN:
+                for e, [player] in self.registry.get_components(Player):
+                    if event.key in player.key_map.keys():
+                        self.registry.add_component(e, player.key_map[event.key])
+                        continue
+            if event.type == pygame.KEYUP:
+                for e, [player] in self.registry.get_components(Player):
+                    if event.key in player.key_map.keys():
+                        self.registry.remove_component(e, player.key_map[event.key])
+                        continue
+
+            if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_q:
                     self.emit(GameExitEvent())
                     break
@@ -24,46 +35,3 @@ class InputSystem(System):
             if event.type == pygame.KEYDOWN: 
                 if event.key == pygame.K_u:
                     self.emit(ToggleFullscreenEvent())
-            for e, [c, m] in self.registry.get_components(PlayerOne, Movable):
-                if event.type == pygame.KEYDOWN: 
-                    if event.key == pygame.K_UP:
-                        self.emit(AccelEvent(e, AccelEvent.FW, 1))
-                    elif event.key == pygame.K_DOWN:
-                        self.emit(AccelEvent(e, AccelEvent.BW, 1))
-                    elif event.key == pygame.K_LEFT:
-                        self.emit(AccelEvent(e, AccelEvent.LT, 1))
-                    elif event.key == pygame.K_RIGHT:
-                        self.emit(AccelEvent(e, AccelEvent.RG, 1))
-                    elif event.key == pygame.K_SPACE:
-                        self.emit(ShootEvent(e))
-                elif event.type == pygame.KEYUP: 
-                    if event.key == pygame.K_UP:
-                        self.emit(AccelEvent(e, AccelEvent.FW, 0))
-                    elif event.key == pygame.K_DOWN:
-                        self.emit(AccelEvent(e, AccelEvent.BW, 0))
-                    elif event.key == pygame.K_LEFT:
-                        self.emit(AccelEvent(e, AccelEvent.LT, 0))
-                    elif event.key == pygame.K_RIGHT:
-                        self.emit(AccelEvent(e, AccelEvent.RG, 0))
-
-            for e, [c, m] in self.registry.get_components(PlayerTwo, Movable):
-                if event.type == pygame.KEYDOWN: 
-                    if event.key == pygame.K_w:
-                        self.emit(AccelEvent(e, AccelEvent.FW, 1))
-                    elif event.key == pygame.K_s:
-                        self.emit(AccelEvent(e, AccelEvent.BW, 1))
-                    elif event.key == pygame.K_a:
-                        self.emit(AccelEvent(e, AccelEvent.LT, 1))
-                    elif event.key == pygame.K_d:
-                        self.emit(AccelEvent(e, AccelEvent.RG, 1))
-                    elif event.key == pygame.K_e:
-                        self.emit(ShootEvent(e))
-                elif event.type == pygame.KEYUP: 
-                    if event.key == pygame.K_w:
-                        self.emit(AccelEvent(e, AccelEvent.FW, 0))
-                    elif event.key == pygame.K_s:
-                        self.emit(AccelEvent(e, AccelEvent.BW, 0))
-                    elif event.key == pygame.K_a:
-                        self.emit(AccelEvent(e, AccelEvent.LT, 0))
-                    elif event.key == pygame.K_d:
-                        self.emit(AccelEvent(e, AccelEvent.RG, 0))

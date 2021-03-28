@@ -6,7 +6,7 @@ from .components import *
 class ProjectileSystem(System):
     def initialize(self):
         self.on(TickEvent, self.handle_cooldowns)
-        self.on(ShootEvent, self.on_shootevent)
+        self.on(TickEvent, self.on_shootevent)
 
     def handle_cooldowns(self, event):
         for e, (g,) in self.registry.get_components(
@@ -19,19 +19,14 @@ class ProjectileSystem(System):
                 w.countdown -= dt/1000
 
     def on_shootevent(self, event):
-        (p, w) = self.registry.get_entity(
-                event.entity,
-                Position, Weapon)
-        if w.countdown <= 0:
-            w.countdown = w.cooldown
-            rocket_sprite = self.registry.add_entity(
-                    SpriteSheet(filename="res/rocket.bmp",
-                                slices = {AnimationEvent.DEFAULT: [(0, 0, 15, 50), (0, 15, 15, 50)] }))
-            self.registry.add_entity(
-                    Position(x=p.x, y=p.y),
-                    Velocity(),
-                    Movable(forward=1),
-                    Renderable(),
-                    Collidable(),
-                    Animatable(rocket_sprite))
-            self.emit(AnimationEvent(event.entity, AnimationEvent.SHOOTING))
+        for e, [s, p, w] in self.registry.get_components(Shooting, Position, Weapon):
+            if w.countdown <= 0:
+                w.countdown = w.cooldown
+                self.registry.add_entity(
+                        Position(x=p.x, y=p.y),
+                        Velocity(),
+                        Health(),
+                        UpAccel(),
+                        Renderable(),
+                        Collidable(),
+                        Animatable("rocket"))

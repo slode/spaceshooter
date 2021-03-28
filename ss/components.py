@@ -1,17 +1,28 @@
 from triton.ecs import Component
 
-class PlayerOne(Component):
+class LeftAccel(Component):
     pass
 
-class PlayerTwo(Component):
+class RightAccel(Component):
     pass
 
-class Movable(Component):
-    def __init__(self, forward=0, backward=0, left=0, right=0):
-        self.forward = forward
-        self.backward = backward
-        self.left = left
-        self.right = right
+class UpAccel(Component):
+    pass
+
+class DownAccel(Component):
+    pass
+
+class Shooting(Component):
+    pass
+
+class Player(Component):
+    def __init__(self, keymap={}):
+        self.key_map = keymap
+
+class EntityAi(Component):
+    def __init__(self):
+        self.target = None
+        self.close_range = False
 
 class EntityState(Component):
     UPLEFT=1
@@ -35,10 +46,17 @@ class Position(Component):
         self.y = y
 
 class Velocity(Component):
-    def __init__(self, x=0, y=0, attenuation=0.90):
+    def __init__(self, x=0, y=0, attenuation=0.90, max_speed=5.0):
         self.attenuation = attenuation
         self.x = x
         self.y = y
+        self.max_speed = max_speed
+
+class Accel(Component):
+    def __init__(self, x=0, y=0, mass=100.0):
+        self.x = x
+        self.y = y
+        self.mass = mass
 
 class Weapon(Component):
     def __init__(self, sprite_name=None, damage=10, cooldown=0.5):
@@ -48,21 +66,14 @@ class Weapon(Component):
         self.countdown = 0
 
 class Animatable(Component):
-    def __init__(self, sprite_entity):
+    def __init__(self, sprite_entity, loopable=True):
         self.sprite_entity = sprite_entity
         self.frame_rate = 30.0
         self.frame_index = 0
         self.frame_timer = 0
-        self.loopable = True
+        self.loopable = loopable
         self.sprites = None
-
-from ss.sprites import SpriteLoader
-class SpriteSheet(Component):
-    def __init__(self, filename=None, slices={}):
-        ss = SpriteLoader(filename)
-        self.sprites = {}
-        for k,v in slices.items():
-            self.sprites[k] = ss.images_at(v, colorkey=-1)
+        self.animation_state = None
 
 class Renderable(Component):
     def __init__(self):
@@ -72,6 +83,7 @@ class Renderable(Component):
 class Health(Component):
     def __init__(self, health=10):
         self.health = 10
+        self.die_duration = 1.0
 
 class Collidable(Component):
     def __init__(self):
