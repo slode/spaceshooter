@@ -19,7 +19,7 @@ class ProjectileSystem(System):
                 w.countdown -= dt/1000
 
     def on_shootevent(self, event):
-        for e, [s, p, w] in self.registry.get_components(Shooting, Position, Weapon):
+        for e, [s, p, w, c] in self.registry.get_components(Shooting, Position, Weapon, Collidable):
             if w.countdown <= 0:
                 w.countdown = w.cooldown
                 self.registry.add_entity(
@@ -28,5 +28,5 @@ class ProjectileSystem(System):
                         Health(),
                         UpAccel(),
                         Renderable(),
-                        Collidable(),
+                        Collidable(team=c.team),
                         Animatable("rocket"))

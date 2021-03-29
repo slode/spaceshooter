@@ -44,7 +44,8 @@ def generate_grid(slice_size=(10,10), grid_size=(1,1)):
     slices = []
     for r in range(grid_size[0]):
         for c in range(grid_size[1]):
-            slices.append((r*slice_size[0], c*slice_size[1], (r+1)*slice_size[0], (c+1)*slice_size[1]))
+            slices.append((r*slice_size[0], c*slice_size[1], slice_size[0], slice_size[1]))
+    print(slices)
     return slices
 
 class AnimationSystem(System):
@@ -72,22 +73,25 @@ class AnimationSystem(System):
                 self.emit(AnimationEvent(e))
                 continue
             
-            if  (t - a.frame_timer) > (1000 / a.frame_rate):
-                r.image = a.sprites[a.frame_index]
-                a.frame_timer = t
-                a.frame_index += 1
-                r.rect = r.image.get_rect()
-                r.rect.center = (p.x, p.y)
+            if a.frame_index == len(a.sprites) - 1 and not a.loopable:
+                self.emit(AnimationStopEvent(e))
+                continue
 
-            if a.frame_index >= len(a.sprites):
-                if not a.loopable:
-                    self.emit(AnimationStopEvent(e))
-                else:
-                    a.frame_index = 0
+            if  r.image is None or (t - a.frame_timer) > (1000 / a.frame_rate):
+                a.frame_timer = t
+                a.frame_index = (a.frame_index + 1) % len(a.sprites)
+                r.image = a.sprites[a.frame_index]
+
+            r.rect = r.image.get_rect()
+            r.rect.center = (p.x, p.y)
+
 
     def on_animation_event(self, animation_event):
-        a, = self.registry.get_entity(
-                animation_event.entity, Animatable)
+        try:
+            a, = self.registry.get_entity(
+                    animation_event.entity, Animatable)
+        except KeyError:
+            return
 
         if animation_event.state == a.animation_state:
             return
@@ -105,10 +109,8 @@ class AnimationSystem(System):
     def on_animation_stop(self, stopev):
         [a] = self.registry.get_entity(
                 startev.entity, Animatable)
-        if a.loopable:
-            a.frame_index = 0
-        else:
-            self.emit(AnimationEvent(stopev.entity))
+
+        self.emit(AnimationEvent(stopev.entity))
 
     def on_update(self, _):
         for e, [a] in self.registry.get_components(Animatable):

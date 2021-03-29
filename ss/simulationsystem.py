@@ -16,7 +16,7 @@ class SimulationSystem(System):
     def update(self, _):
         for e, (g,) in self.registry.get_components(
                 GameState):
-            if g.t - self._last_update > 0:
+            if g.t - self._last_update > 1000/60:
                 self._last_update = g.t
                 self.emit(SimulationTickEvent())
 

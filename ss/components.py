@@ -24,22 +24,6 @@ class EntityAi(Component):
         self.target = None
         self.close_range = False
 
-class EntityState(Component):
-    UPLEFT=1
-    UPCENTER=2
-    UPRIGHT=3
-    LEFT=4
-    DEFAULT=5
-    RIGHT=6
-    BACKLEFT=7
-    BACKCENTER=8
-    BACKRIGHT=9
-    SHOOTING=10
-    EXPLODING=11
-
-    def __init__(self):
-        self.state = self.DEFAULT
-
 class Position(Component):
     def __init__(self, x=0, y=0):
         self.x = x
@@ -66,9 +50,9 @@ class Weapon(Component):
         self.countdown = 0
 
 class Animatable(Component):
-    def __init__(self, sprite_entity, loopable=True):
+    def __init__(self, sprite_entity, loopable=True, frame_rate=30):
         self.sprite_entity = sprite_entity
-        self.frame_rate = 30.0
+        self.frame_rate = frame_rate
         self.frame_index = 0
         self.frame_timer = 0
         self.loopable = loopable
@@ -82,11 +66,12 @@ class Renderable(Component):
 
 class Health(Component):
     def __init__(self, health=10):
-        self.health = 10
+        self.health = health
         self.die_duration = 1.0
 
 class Collidable(Component):
-    def __init__(self):
+    def __init__(self, team=1):
+        self.team = team
         self.rect = None
 
 class GameState(Component):

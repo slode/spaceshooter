@@ -25,10 +25,10 @@ def main():
     registry.add_system(SimulationSystem())
     registry.add_system(ScreenwrapSystem())
     registry.add_system(CollisionSystem())
-    registry.add_system(DamageSystem())
     registry.add_system(ProjectileSystem())
     animation_system = registry.add_system(AnimationSystem())
     registry.add_system(RenderSystem())
+    registry.add_system(DamageSystem())
     registry.add_system(GameStateSystem())
 
     from ss.animationsystem import sprite_by_slices, generate_grid, AnimationEvent
@@ -62,6 +62,7 @@ def main():
             }))
 
     import pygame
+
     registry.add_entity(
             Player(keymap={
                 pygame.K_UP: UpAccel(),
@@ -99,9 +100,9 @@ def main():
             Position(),
             UpAccel(),
             Velocity(),
-            Health(),
+            Health(health=50),
             Weapon(),
-            Collidable(),
+            Collidable(team=2),
             Animatable("spaceship"),
             Renderable()
             )

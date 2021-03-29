@@ -1,4 +1,5 @@
 from triton.ecs import System
+from triton.vector2d import Vector2d
 
 from .events import *
 from .components import *
@@ -32,22 +33,20 @@ class DamageSystem(System):
         h2.health -= damage
 
         if h1.health <= 0:
-            self.registry.remove_component(event.entity1, Collidable)
-            self.registry.add_entity(
-                    Position(x=p1.x, y=p1.y),
-                    Velocity(x=v1.x, y=v1.y),
-                    Movable(),
-                    Renderable(),
-                    Animatable("explosion", loopable=False))
+            self.registry.remove_entity(event.entity1)
 
         if h2.health <= 0:
-            self.registry.remove_component(event.entity2, Collidable)
+            self.registry.remove_entity(event.entity2)
+
+        if h2.health <= 0 or h1.health <= 0:
+            p_avg = Vector2d(p1.x+p2.x, p1.y+p2.y)
+            v_avg = Vector2d(v1.x+v2.x, v1.y+v2.y)
             self.registry.add_entity(
-                    Position(x=p2.x, y=p2.y),
-                    Velocity(x=v2.x, y=v2.y),
-                    Movable(),
+                    Position(x=p_avg.x, y=p_avg.y),
+                    Velocity(x=v_avg.x, y=v_avg.y),
+                    Health(health=0),
                     Renderable(),
-                    Animatable("explosion", loopable=False))
+                    Animatable("explosion", loopable=False, frame_rate=10))
 
     def update(self, _):
         pass
