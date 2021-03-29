@@ -34,9 +34,9 @@ class SimulationSystem(System):
             ax -= 1.0 if left  else 0.0
 
             v.y += ay * dt / 100.0
-            v.x += ax * dt/100.0
-            v.y = min(v.y, v.max_speed)
-            v.x = min(v.x, v.max_speed)
+            v.x += ax * dt / 100.0
+            v.y = max(min(v.y, v.max_speed), -v.max_speed)
+            v.x = max(min(v.x, v.max_speed), -v.max_speed)
 
         for e, (p, v) in self.registry.get_components(
                 Position, Velocity):

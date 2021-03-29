@@ -22,8 +22,11 @@ class DamageSystem(System):
         pass
 
     def on_collision(self, event):
-        [p1, v1, h1] = self.registry.get_entity(event.entity1, Position, Velocity, Health)
-        [p2, v2, h2] = self.registry.get_entity(event.entity2, Position, Velocity, Health)
+        try:
+            [p1, v1, h1] = self.registry.get_entity(event.entity1, Position, Velocity, Health)
+            [p2, v2, h2] = self.registry.get_entity(event.entity2, Position, Velocity, Health)
+        except KeyError:
+            return
 
         if h1 is None or h2 is None:
             return 
@@ -39,8 +42,8 @@ class DamageSystem(System):
             self.registry.remove_entity(event.entity2)
 
         if h2.health <= 0 or h1.health <= 0:
-            p_avg = Vector2d(p1.x+p2.x, p1.y+p2.y)
-            v_avg = Vector2d(v1.x+v2.x, v1.y+v2.y)
+            p_avg = Vector2d(p1.x+p2.x, p1.y+p2.y)/2
+            v_avg = Vector2d(v1.x+v2.x, v1.y+v2.y)/2
             self.registry.add_entity(
                     Position(x=p_avg.x, y=p_avg.y),
                     Velocity(x=v_avg.x, y=v_avg.y),

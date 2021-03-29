@@ -20,6 +20,7 @@ class ProjectileSystem(System):
 
     def on_shootevent(self, event):
         for e, [s, p, w, c] in self.registry.get_components(Shooting, Position, Weapon, Collidable):
+
             if w.countdown <= 0:
                 w.countdown = w.cooldown
                 self.registry.add_entity(

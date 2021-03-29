@@ -79,33 +79,34 @@ def main():
             Animatable("spaceship"),
             Renderable())
 
-    registry.add_entity(
-            Player(keymap={
-                pygame.K_w: UpAccel(),
-                pygame.K_s: DownAccel(),
-                pygame.K_d: RightAccel(),
-                pygame.K_a: LeftAccel(),
-                pygame.K_e: Shooting()
-            }),
-            Position(x=100, y=100),
-            Velocity(),
-            Health(health=50),
-            Weapon(),
-            Collidable(),
-            Animatable("spaceship"),
-            Renderable())
+    # registry.add_entity(
+            # Player(keymap={
+                # pygame.K_w: UpAccel(),
+                # pygame.K_s: DownAccel(),
+                # pygame.K_d: RightAccel(),
+                # pygame.K_a: LeftAccel(),
+                # pygame.K_e: Shooting()
+            # }),
+            # Position(x=100, y=100),
+            # Velocity(),
+            # Health(health=50),
+            # Weapon(),
+            # Collidable(),
+            # Animatable("spaceship"),
+            # Renderable())
 
-    registry.add_entity(
-            EntityAi(),
-            Position(),
-            UpAccel(),
-            Velocity(),
-            Health(health=50),
-            Weapon(),
-            Collidable(team=2),
-            Animatable("spaceship"),
-            Renderable()
-            )
+    for i in range(5):
+        registry.add_entity(
+                EntityAi(),
+                Position(),
+                UpAccel(),
+                Velocity(max_speed=0.3),
+                Health(health=50),
+                Weapon(),
+                Collidable(team=2),
+                Animatable("spaceship"),
+                Renderable()
+                )
 
     gamestate = GameState()
     registry.add_entity(gamestate)

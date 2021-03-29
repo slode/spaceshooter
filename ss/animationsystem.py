@@ -45,7 +45,6 @@ def generate_grid(slice_size=(10,10), grid_size=(1,1)):
     for r in range(grid_size[0]):
         for c in range(grid_size[1]):
             slices.append((r*slice_size[0], c*slice_size[1], slice_size[0], slice_size[1]))
-    print(slices)
     return slices
 
 class AnimationSystem(System):
